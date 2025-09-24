@@ -1,4 +1,3 @@
-// src/store/posts.ts
 "use client";
 import { create } from "zustand";
 import axios from "axios";
@@ -17,9 +16,14 @@ export const usePosts = create<State>((set) => ({
   loading: false,
   error: null,
   fetchData: async () => {
-    const { data } = await axios.get<Post[]>(
-      "https://jsonplaceholder.typicode.com/posts"
-    );
-    set({ items: data });
+    set({ loading: true, error: null });
+    try {
+      const { data } = await axios.get<Post[]>(
+        "https://jsonplaceholder.typicode.com/posts"
+      );
+      set({ items: data, loading: false });
+    } catch (e: any) {
+      set({ error: e.message, loading: false });
+    }
   },
 }));
