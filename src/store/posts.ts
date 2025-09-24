@@ -22,8 +22,13 @@ export const usePosts = create<State>((set) => ({
         "https://jsonplaceholder.typicode.com/posts"
       );
       set({ items: data, loading: false });
-    } catch (e: any) {
-      set({ error: e.message, loading: false });
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        set({ error: e.message, loading: false });
+      } else {
+        set({ error: String(e), loading: false });
+      }
     }
   },
 }));
+
